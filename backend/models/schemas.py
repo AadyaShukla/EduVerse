@@ -33,3 +33,30 @@ class DoubtRequest(BaseModel):
 
 class DoubtResponse(BaseModel):
     steps: list[str]
+
+class QuizGenerateRequest(BaseModel):
+    student_id: UUID
+    topic: str
+    notes_text: Optional[str] = None
+    is_mock_exam: bool = False
+
+class QuizQuestion(BaseModel):
+    question: str
+    options: Optional[list[str]] = None
+    correct_answer: str
+    explanation: str
+
+class QuizGenerateResponse(BaseModel):
+    quiz_id: UUID
+    questions: list[QuizQuestion]
+
+class QuizAttemptRequest(BaseModel):
+    student_id: UUID
+    quiz_id: UUID
+    score: int
+    answers: dict[str, str] # question -> given answer
+    weak_topics: list[str] # Topics the user failed on (simple extraction from frontend for this mock)
+
+class WeakTopic(BaseModel):
+    topic: str
+    times_wrong: int
