@@ -25,24 +25,51 @@ class GeminiService:
     def is_configured(self) -> bool:
         return self._model is not None
 
-    async def generate_response_stub(self, prompt: str, student_grade: int) -> Dict[str, Any]:
+    def sanitize_k12_output(self, text: str) -> str:
         """
-        Placeholder response generator for Phase 0.
+        K-12 Content Safety Filter: Sanitizes response text for appropriate student context.
         """
-        if self._model:
-            try:
-                response = await self._model.generate_content_async(
-                    f"You are EduVerse AI Tutor for Grade {student_grade}. Answer: {prompt}"
-                )
-                return {"text": response.text, "status": "success"}
-            except Exception as e:
-                return {"text": f"Gemini API call failed: {str(e)}", "status": "error"}
+        if not text:
+            return ""
 
-        return {
-            "text": f"[Phase 0 Gemini Stub for Grade {student_grade}]: Received prompt '{prompt}'. Configure GEMINI_API_KEY in backend/.env for live LLM responses.",
-            "status": "mock"
-        }
+        inappropriate_keywords = ["violence", "explicit", "nsfw", "harmful"]
+        lower_text = text.lower()
+        for word in inappropriate_keywords:
+            if word in lower_text:
+                return "The generated content was flagged for safety and sanitized for K-12 educational standards."
 
+        return text
+
+    async def generate_response_stub(self, prompt: str, student_grade: Optional[int] = None) -> Dict[str, Any]:
+        """
+        Simulates calling Google Gemini API 1.5 Flash (free tier) with K-12 safety settings.
+        """
+        if not self.is_configured:
+            return {
+                "text": f"Stub Gemini response for grade {student_grade or 'general'}: Content sanitized for K-12 safety.",
+                "status": "mock"
+            }
+
+        try:
+            import google.generativeai as genai
+            model = genai.GenerativeModel(
+                'gemini-1.5-flash',
+                safety_settings={
+                    "HARASSMENT": "BLOCK_LOW_AND_ABOVE",
+                    "HATE_SPEECH": "BLOCK_LOW_AND_ABOVE",
+                    "SEXUALLY_EXPLICIT": "BLOCK_LOW_AND_ABOVE",
+                    "DANGEROUS_CONTENT": "BLOCK_LOW_AND_ABOVE",
+                }
+            )
+            response = await model.generate_content_async(prompt)
+            sanitized = self.sanitize_k12_output(response.text)
+            return {"text": sanitized, "status": "success"}
+        except Exception as e:
+            return {"text": f"Error calling Gemini: {e}", "status": "error"}
+
+    def _clean_json_string(self, text: str) -> str:
+        text = text.replace("```json", "").replace("```", "")
+        return text.strip()
 
     async def generate_lecture_script(self, topic: str, grade: int) -> Dict[str, Any]:
         """

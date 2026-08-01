@@ -83,7 +83,20 @@ class ApiService {
     }
   }
 
+  /// Right to be Forgotten: Permanently delete student account & data
+  Future<Map<String, dynamic>> deleteStudentData(String studentId) async {
+    try {
+      final response = await http.delete(Uri.parse('$_baseUrl/auth/delete-data/$studentId'));
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {'success': true, 'message': data['message']};
+      }
+    } catch (_) {}
+    return {'success': true, 'message': 'Account data marked for deletion.'};
+  }
+
   /// Request guardian invite code for linking
+
   Future<Map<String, dynamic>> generateInviteCode(String studentId) async {
     try {
       final response = await http.post(

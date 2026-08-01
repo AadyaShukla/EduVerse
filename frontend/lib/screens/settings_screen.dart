@@ -4,7 +4,9 @@ import '../core/theme/app_theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/guardian_provider.dart';
 import '../providers/accessibility_provider.dart';
+import '../services/api_service.dart';
 import '../services/usage_tracker_service.dart';
+
 
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -226,6 +228,79 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 32),
+
+              // Right to be Forgotten Section
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppTheme.warningOrange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppTheme.warningOrange.withOpacity(0.5)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(Icons.delete_forever_rounded, color: AppTheme.warningOrange, size: 28),
+                        SizedBox(width: 10),
+                        Text('Privacy & Data Control', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Permanently delete your profile, doubts, notes, and quiz history under privacy regulations.',
+                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              backgroundColor: AppTheme.cardSurface,
+                              title: const Text('Delete All Account Data?'),
+                              content: const Text(
+                                'This action is permanent and will delete all your notes, doubts, quiz scores, and streak progress.',
+                                style: TextStyle(color: AppTheme.textSecondary),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(),
+                                  child: const Text('Cancel'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final student = ref.read(authProvider).student;
+                                    if (student != null) {
+                                      final api = ApiService();
+                                      await api.deleteStudentData(student.id);
+                                      await ref.read(authProvider.notifier).logout();
+                                      if (mounted) {
+                                        Navigator.of(ctx).pop();
+                                        Navigator.of(context).pop();
+                                      }
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.warningOrange),
+                                  child: const Text('Permanently Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.delete_forever),
+                        label: const Text('Delete My Account & Data'),
+                        style: ElevatedButton.styleFrom(backgroundColor: AppTheme.warningOrange),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -233,3 +308,4 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 }
+

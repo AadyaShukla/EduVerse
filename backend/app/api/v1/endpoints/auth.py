@@ -55,3 +55,14 @@ def verify_totp(payload: TOTPVerifyRequest):
         student_id=payload.student_id,
         message="TOTP verified successfully. You can now reset local PIN credentials."
     )
+
+@router.delete("/delete-data/{student_id}")
+def delete_student_data(student_id: str):
+    """
+    Right to be Forgotten endpoint permanently deleting student records under GDPR / COPPA.
+    """
+    try:
+        return AuthService.delete_student_data(student_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

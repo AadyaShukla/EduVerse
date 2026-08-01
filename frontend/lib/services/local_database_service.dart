@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
 
 class LocalDatabaseService {
   static Database? _database;
@@ -114,11 +116,12 @@ class LocalDatabaseService {
       {
         'id': DateTime.now().millisecondsSinceEpoch.toString(),
         'action_type': actionType,
-        'payload_json': payload.toString(),
+        'payload_json': jsonEncode(payload),
         'created_at': DateTime.now().toIso8601String(),
       },
     );
   }
+
 
   /// Flush offline sync queue when connection returns
   Future<List<Map<String, dynamic>>> getSyncQueueItems() async {

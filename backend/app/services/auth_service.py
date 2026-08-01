@@ -93,3 +93,26 @@ class AuthService:
             return False
         totp = pyotp.TOTP(student["totp_secret"])
         return totp.verify(token)
+
+    @classmethod
+    def delete_student_data(cls, student_id: str) -> Dict[str, Any]:
+        """
+        Right to be Forgotten: Permanently deletes all student doubts, notes,
+        quiz attempts, schedule items, and profile metrics from database.
+        """
+        if db.is_live:
+            db.client.table("doubts").delete().eq("student_id", student_id).execute()
+            db.client.table("notes").delete().eq("student_id", student_id).execute()
+            db.client.table("quiz_attempts").delete().eq("student_id", student_id).execute()
+            db.client.table("schedule_items").delete().eq("student_id", student_id).execute()
+            db.client.table("focus_sessions").delete().eq("student_id", student_id).execute()
+            db.client.table("student_progress").delete().eq("student_id", student_id).execute()
+            db.client.table("students").delete().eq("id", student_id).execute()
+        else:
+            db._mock_students.pop(student_id, None)
+
+        return {
+            "success": True,
+            "message": "All student account records and learning history permanently deleted under privacy regulations."
+        }
+

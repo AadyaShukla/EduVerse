@@ -1,0 +1,31 @@
+# Environment Variables & Keys
+.env
+.env.local
+*.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+
+# Flutter / Dart
+frontend/.dart_tool/
+frontend/.packages
+frontend/.pub/
+frontend/build/
+frontend/android/app/key.jks
+frontend/android/key.properties
+
+# OS & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
