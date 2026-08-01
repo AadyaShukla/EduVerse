@@ -5,6 +5,8 @@ import '../core/theme/app_theme.dart';
 import '../core/constants/app_constants.dart';
 import '../providers/auth_provider.dart';
 import 'home_screen.dart';
+import 'guardian_auth_screen.dart';
+
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -398,20 +400,39 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
               // Mode Toggle
               Center(
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isSignUp = !_isSignUp;
-                    });
-                  },
-                  child: Text(
-                    _isSignUp
-                        ? 'Already have an account? Log In'
-                        : "Don't have an account? Sign Up",
-                    style: const TextStyle(color: AppTheme.primaryViolet, fontWeight: FontWeight.bold),
-                  ),
+                child: Column(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isSignUp = !_isSignUp;
+                        });
+                      },
+                      child: Text(
+                        _isSignUp
+                            ? 'Already have an account? Log In'
+                            : "Don't have an account? Sign Up",
+                        style: const TextStyle(color: AppTheme.primaryViolet, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => const GuardianAuthScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.family_restroom_rounded, color: AppTheme.accentCyan),
+                      label: const Text('Switch to Guardian Portal', style: TextStyle(color: AppTheme.accentCyan)),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppTheme.accentCyan),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
 
               // Age-Gate Blocked Status View
               if (authState.status == AuthStatus.ageGateBlocked)

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
 from app.schemas.guardian import (
     InviteCodeRequest, InviteCodeResponse,
-    LinkGuardianRequest, LinkGuardianResponse
+    LinkGuardianRequest, LinkGuardianResponse,
+    RevokeLinkRequest, GuardianDashboardResponse, GuardianAIInsightsResponse
 )
 from app.services.guardian_service import GuardianService
 
@@ -29,5 +30,37 @@ def link_guardian(payload: LinkGuardianRequest):
         return GuardianService.link_guardian(payload)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/revoke")
+def revoke_guardian_link(payload: RevokeLinkRequest):
+    """
+    Revokes guardian link for students grade >= 7.
+    """
+    try:
+        return GuardianService.revoke_guardian_link(payload.student_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/dashboard/{guardian_id}", response_model=GuardianDashboardResponse)
+def get_guardian_dashboard(guardian_id: str):
+    """
+    Retrieves 1-on-1 student progress metrics for the linked guardian.
+    """
+    try:
+        return GuardianService.get_guardian_dashboard(guardian_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/insights/{guardian_id}", response_model=GuardianAIInsightsResponse)
+async def get_guardian_ai_insights(guardian_id: str):
+    """
+    Generates short plain-language weekly AI summary for guardian via Gemini (daily cached).
+    """
+    try:
+        return await GuardianService.generate_ai_insights(guardian_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

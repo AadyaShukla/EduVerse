@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/theme/app_theme.dart';
+import '../providers/auth_provider.dart';
+import '../providers/guardian_provider.dart';
 import '../providers/accessibility_provider.dart';
 import '../services/usage_tracker_service.dart';
+
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -76,7 +79,75 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(height: 24),
 
+              // Parent Consent Transparency & Unlink Section
+              Text('Parent / Guardian Consent', style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppTheme.cardSurface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppTheme.primaryViolet.withOpacity(0.4)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.family_restroom_rounded, color: AppTheme.primaryViolet, size: 28),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Guardian Consent Active',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Your parent/guardian can view your 1-on-1 weekly progress summary.',
+                                style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final student = ref.read(authProvider).student;
+                          if (student != null) {
+                            if (student.grade < 7) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Students under Grade 7 have mandatory guardian links under age-gate rules.')),
+                              );
+                            } else {
+                              await ref.read(guardianProvider.notifier).revokeGuardianLink(student.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Guardian link revoked.')),
+                              );
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.link_off_rounded, color: AppTheme.warningOrange),
+                        label: const Text('Unlink Guardian (Grade 7+ Only)', style: TextStyle(color: AppTheme.warningOrange)),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: AppTheme.warningOrange),
+                          padding: const EdgeInsets.vertical(14),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // Network & Data Settings Section
+
               Text('Network & Data Optimization', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               Container(
