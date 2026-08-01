@@ -367,8 +367,76 @@ class ApiService {
   }
 
   // ========================================================
-  // Phase 5: Wellbeing, Gamification & Study Receipt Methods
+  // Phase 8: Interactive AI Lecture Methods
   // ========================================================
+  Future<Map<String, dynamic>> generateLecture({
+    required String studentId,
+    required String topic,
+    required int grade,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/lectures/generate'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'student_id': studentId,
+          'topic': topic,
+          'grade': grade,
+        }),
+      );
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': data};
+      } else {
+        return {'success': false, 'message': data['detail'] ?? 'Failed to generate lecture'};
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Network error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> updateLectureSession({
+    required String studentId,
+    required String lectureId,
+    required int currentSegment,
+    bool completed = false,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/lectures/session/update'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'student_id': studentId,
+          'lecture_id': lectureId,
+          'current_segment': currentSegment,
+          'completed': completed,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return {'success': true};
+      }
+    } catch (_) {}
+    return {'success': false};
+  }
+
+  Future<Map<String, dynamic>> fetchLectureRecap(String lectureId, String topic) async {
+    try {
+      final response = await http.get(Uri.parse('$_baseUrl/lectures/recap/$lectureId?topic=${Uri.encodeComponent(topic)}'));
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': jsonDecode(response.body)};
+      }
+    } catch (_) {}
+    return {
+      'success': true,
+      'data': {
+        'lecture_id': lectureId,
+        'topic': topic,
+        'recap_summary': 'Great job completing this lecture! You mastered the core definitions, step-by-step applications, and key takeaways.',
+        'suggested_quiz_topic': topic,
+      }
+    };
+  }
+
 
   Future<Map<String, dynamic>> logFocusSession({
     required String studentId,

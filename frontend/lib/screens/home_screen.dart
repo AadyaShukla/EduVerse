@@ -9,6 +9,8 @@ import '../providers/accessibility_provider.dart';
 import '../services/api_service.dart';
 import 'auth_screen.dart';
 import 'doubt_solver_screen.dart';
+import 'lecture_setup_screen.dart';
+
 import 'quiz_setup_screen.dart';
 import 'notes_screen.dart';
 import 'timetable_screen.dart';
@@ -356,6 +358,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 _buildActionTile(
                   context,
+                  title: 'AI Lectures',
+                  subtitle: 'Interactive Slides & Narration',
+                  icon: Icons.cast_for_education_rounded,
+                  color: const Color(0xFFfd79a8),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LectureSetupScreen())),
+                ),
+                _buildActionTile(
+                  context,
                   title: 'Adaptive Quizzes',
                   subtitle: 'Mock Exams & Weak Topics',
                   icon: Icons.quiz_rounded,
@@ -386,16 +396,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   color: const Color(0xFFe84393),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EssayGraderScreen())),
                 ),
-                _buildActionTile(
-                  context,
-                  title: 'Formula Library',
-                  subtitle: 'Math & Physics Theorems',
-                  icon: Icons.functions_rounded,
-                  color: const Color(0xFF0984e3),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReferenceLibraryScreen())),
-                ),
               ],
             ),
+
             const SizedBox(height: 14),
 
             // Citation Generator Card

@@ -37,19 +37,27 @@ CREATE TABLE IF NOT EXISTS public.student_guardian_links (
     PRIMARY KEY (student_id, guardian_id)
 );
 
--- 4. Lecture Sessions Table
-CREATE TABLE IF NOT EXISTS public.lecture_sessions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    student_id UUID NOT NULL REFERENCES public.students(id) ON DELETE CASCADE,
+-- 4. Lectures Table (Cached AI-generated interactive lectures)
+CREATE TABLE IF NOT EXISTS public.lectures (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     topic VARCHAR(255) NOT NULL,
-    current_segment INTEGER NOT NULL DEFAULT 0,
-    paused_at TIMESTAMPTZ NULL,
-    completed BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    grade INTEGER NOT NULL,
+    segments_json JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 5. Doubts Table
+-- 5. Lecture Sessions Table (Student progress tracking)
+CREATE TABLE IF NOT EXISTS public.lecture_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID REFERENCES public.students(id) ON DELETE CASCADE,
+    topic VARCHAR(255) NOT NULL,
+    current_segment INTEGER DEFAULT 0,
+    paused_at TIMESTAMP WITH TIME ZONE,
+    completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 6. Doubts Table
 CREATE TABLE IF NOT EXISTS public.doubts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id UUID NOT NULL REFERENCES public.students(id) ON DELETE CASCADE,
