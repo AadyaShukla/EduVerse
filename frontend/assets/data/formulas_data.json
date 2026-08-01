@@ -1,0 +1,76 @@
+{
+  "subjects": [
+    {
+      "name": "Mathematics",
+      "icon": "calculate",
+      "categories": [
+        {
+          "category": "Algebra & Quadratics",
+          "items": [
+            {
+              "title": "Quadratic Formula",
+              "formula": "x = (-b ± √(b² - 4ac)) / (2a)",
+              "description": "Solves quadratic equations of the form ax² + bx + c = 0."
+            },
+            {
+              "title": "Difference of Squares",
+              "formula": "a² - b² = (a - b)(a + b)",
+              "description": "Factors the difference of two squared terms."
+            }
+          ]
+        },
+        {
+          "category": "Geometry & Trigonometry",
+          "items": [
+            {
+              "title": "Pythagorean Theorem",
+              "formula": "a² + b² = c²",
+              "description": "Relates the side lengths of a right-angled triangle."
+            },
+            {
+              "title": "Area of a Circle",
+              "formula": "A = πr²",
+              "description": "Calculates the area of a circle with radius r."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Physics",
+      "icon": "science",
+      "categories": [
+        {
+          "category": "Kinematics & Motion",
+          "items": [
+            {
+              "title": "Newton's Second Law of Motion",
+              "formula": "F = m · a",
+              "description": "Force equals mass times acceleration."
+            },
+            {
+              "title": "Kinematic Velocity Equation",
+              "formula": "v = u + a·t",
+              "description": "Final velocity under constant acceleration a over time t."
+            }
+          ]
+        },
+        {
+          "category": "Work, Energy & Power",
+          "items": [
+            {
+              "title": "Kinetic Energy",
+              "formula": "KE = ½ m · v²",
+              "description": "Energy possessed by an object due to its motion."
+            },
+            {
+              "title": "Gravitational Potential Energy",
+              "formula": "PE = m · g · h",
+              "description": "Potential energy of an object at height h."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
