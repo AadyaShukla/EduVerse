@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Brand Color Palette
+  // Standard Brand Color Palette
   static const Color primaryViolet = Color(0xFF6C5CE7);
   static const Color accentCyan = Color(0xFF00CEC9);
   static const Color darkBackground = Color(0xFF0F0E17);
@@ -11,6 +11,13 @@ class AppTheme {
   static const Color textSecondary = Color(0xFFA7A9BE);
   static const Color warningOrange = Color(0xFFFF7675);
   static const Color successGreen = Color(0xFF55E6C1);
+
+  // High-Contrast Palette Tokens
+  static const Color hcBackground = Color(0xFF000000);
+  static const Color hcCardSurface = Color(0xFF121212);
+  static const Color hcPrimary = Color(0xFFFFD700); // High contrast gold/yellow
+  static const Color hcAccent = Color(0xFF00FFFF);  // High contrast cyan
+  static const Color hcText = Color(0xFFFFFFFF);
 
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [Color(0xFF6C5CE7), Color(0xFFa29bfe)],
@@ -24,52 +31,55 @@ class AppTheme {
     end: Alignment.bottomRight,
   );
 
-  static ThemeData get darkTheme {
+  static ThemeData getTheme({
+    bool isHighContrast = false,
+    bool isDyslexicFont = false,
+  }) {
+    final bg = isHighContrast ? hcBackground : darkBackground;
+    final surface = isHighContrast ? hcCardSurface : cardSurface;
+    final primary = isHighContrast ? hcPrimary : primaryViolet;
+    final secondary = isHighContrast ? hcAccent : accentCyan;
+
+    TextTheme baseTextTheme = ThemeData.dark().textTheme;
+    if (isDyslexicFont) {
+      baseTextTheme = GoogleFonts.lexendTextTheme(baseTextTheme);
+    } else {
+      baseTextTheme = GoogleFonts.outfitTextTheme(baseTextTheme);
+    }
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
-      colorScheme: const ColorScheme.dark(
-        primary: primaryViolet,
-        secondary: accentCyan,
-        surface: cardSurface,
-        background: darkBackground,
+      scaffoldBackgroundColor: bg,
+      colorScheme: ColorScheme.dark(
+        primary: primary,
+        secondary: secondary,
+        surface: surface,
+        background: bg,
         error: warningOrange,
       ),
-      textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme).copyWith(
-        displayLarge: GoogleFonts.outfit(color: textPrimary, fontSize: 32, fontWeight: FontWeight.bold),
-        titleLarge: GoogleFonts.outfit(color: textPrimary, fontSize: 22, fontWeight: FontWeight.w600),
-        bodyLarge: GoogleFonts.inter(color: textPrimary, fontSize: 16),
-        bodyMedium: GoogleFonts.inter(color: textSecondary, fontSize: 14),
+      textTheme: baseTextTheme.copyWith(
+        displayLarge: baseTextTheme.displayLarge?.copyWith(color: hcText, fontSize: 32, fontWeight: FontWeight.bold),
+        titleLarge: baseTextTheme.titleLarge?.copyWith(color: hcText, fontSize: 22, fontWeight: FontWeight.w600),
+        bodyLarge: baseTextTheme.bodyLarge?.copyWith(color: hcText, fontSize: 16),
+        bodyMedium: baseTextTheme.bodyMedium?.copyWith(color: isHighContrast ? hcText : textSecondary, fontSize: 14),
       ),
       cardTheme: CardTheme(
-        color: cardSurface,
+        color: surface,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF2A2739),
+        fillColor: isHighContrast ? const Color(0xFF222222) : const Color(0xFF2A2739),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: primaryViolet, width: 2),
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryViolet,
-          foregroundColor: Colors.white,
-          elevation: 4,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 28),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          textStyle: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w600),
+          borderSide: BorderSide(color: isHighContrast ? hcPrimary : Colors.none),
         ),
       ),
     );
   }
+
+  static ThemeData get darkTheme => getTheme();
 }

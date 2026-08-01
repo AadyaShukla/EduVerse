@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import '../core/theme/app_theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/productivity_provider.dart';
+import '../widgets/read_aloud_button.dart';
+
 
 class NotesScreen extends ConsumerStatefulWidget {
   const NotesScreen({Key? key}) : super(key: key);
@@ -258,8 +260,11 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
               padding: EdgeInsets.zero,
             )).toList(),
           ),
+          const SizedBox(height: 10),
+          ReadAloudButton(textToRead: "$title. $snippet", label: 'Read Note Aloud'),
         ],
       ),
     );
   }
 }
+

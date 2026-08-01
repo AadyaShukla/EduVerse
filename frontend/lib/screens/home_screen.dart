@@ -4,6 +4,8 @@ import '../core/theme/app_theme.dart';
 import '../core/constants/app_constants.dart';
 import '../providers/auth_provider.dart';
 import '../providers/wellbeing_provider.dart';
+import '../providers/accessibility_provider.dart';
+
 import '../services/api_service.dart';
 import 'auth_screen.dart';
 import 'doubt_solver_screen.dart';
@@ -97,6 +99,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       });
     }
 
+    final accessState = ref.watch(accessibilityProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.cardSurface,
@@ -118,7 +122,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_rounded, color: AppTheme.accentCyan),
-            tooltip: 'Settings & Anti-Addiction',
+            tooltip: 'Settings & Accessibility',
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
           ),
           IconButton(
@@ -138,6 +142,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Offline Mode Persistent Indicator Banner
+            if (accessState.isOffline)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: AppTheme.warningOrange.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppTheme.warningOrange),
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.wifi_off_rounded, color: AppTheme.warningOrange, size: 20),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Offline Mode Active — Serving cached SQLite data & queuing syncs.',
+                        style: TextStyle(color: AppTheme.warningOrange, fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             // Student Profile & Gamification Header Banner
             Container(
               width: double.infinity,
