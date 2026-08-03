@@ -154,9 +154,45 @@ class LocalDatabaseService {
     }
   }
 
+  /// Cache Student Profile
+  Future<void> cacheStudentProfile(Map<String, dynamic> student) async {
+    final db = await database;
+    await db.insert(
+      'cached_students',
+      {
+        'id': student['id'] ?? '',
+        'name': student['name'] ?? '',
+        'grade': student['grade'] ?? 1,
+        'parent_link_required': (student['parent_link_required'] == true) ? 1 : 0,
+        'is_active': (student['is_active'] == true) ? 1 : 0,
+        'created_at': student['created_at'] ?? DateTime.now().toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  /// Get Cached Student Profile
+  Future<Map<String, dynamic>?> getCachedStudentProfile(String studentId) async {
+    final db = await database;
+    final res = await db.query('cached_students', where: 'id = ?', whereArgs: [studentId]);
+    if (res.isNotEmpty) {
+      final row = res.first;
+      return {
+        'id': row['id'],
+        'name': row['name'],
+        'grade': row['grade'],
+        'parent_link_required': row['parent_link_required'] == 1,
+        'is_active': row['is_active'] == 1,
+        'created_at': row['created_at'],
+      };
+    }
+    return null;
+  }
+
   /// Get Cached Notes
   Future<List<Map<String, dynamic>>> getCachedNotes() async {
     final db = await database;
     return await db.query('cached_notes', orderBy: 'updated_at DESC');
   }
 }
+

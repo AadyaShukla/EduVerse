@@ -437,7 +437,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               // Age-Gate Blocked Status View
               if (authState.status == AuthStatus.ageGateBlocked)
                 Container(
-                  margin: const EdgeInsets.top(24),
+                  margin: const EdgeInsets.only(top: 24),
+
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppTheme.cardSurface,

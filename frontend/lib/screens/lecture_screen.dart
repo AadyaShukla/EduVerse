@@ -7,9 +7,10 @@ import '../providers/doubt_provider.dart';
 import 'quiz_setup_screen.dart';
 
 class LectureScreen extends ConsumerStatefulWidget {
-  const LectureScreen({Key? key}) : super(Key: key);
+  const LectureScreen({super.key});
 
   @override
+
   ConsumerState<LectureScreen> createState() => _LectureScreenState();
 }
 

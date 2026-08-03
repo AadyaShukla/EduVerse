@@ -75,7 +75,7 @@ class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: isHighContrast ? hcPrimary : Colors.none),
+          borderSide: isHighContrast ? const BorderSide(color: hcPrimary) : BorderSide.none,
         ),
       ),
     );

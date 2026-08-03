@@ -103,7 +103,8 @@ class _DoubtSolverScreenState extends ConsumerState<DoubtSolverScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.cardSurface,
                         foregroundColor: AppTheme.accentCyan,
-                        padding: const EdgeInsets.vertical(14),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+
                       ),
                     ),
                   ),
@@ -118,7 +119,8 @@ class _DoubtSolverScreenState extends ConsumerState<DoubtSolverScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.cardSurface,
                         foregroundColor: AppTheme.primaryViolet,
-                        padding: const EdgeInsets.vertical(14),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+
                       ),
                     ),
                   ),
@@ -145,7 +147,8 @@ class _DoubtSolverScreenState extends ConsumerState<DoubtSolverScreen> {
                     side: BorderSide(
                       color: doubtState.isListening ? AppTheme.warningOrange : AppTheme.accentCyan,
                     ),
-                    padding: const EdgeInsets.vertical(14),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+
                   ),
                 ),
               ),

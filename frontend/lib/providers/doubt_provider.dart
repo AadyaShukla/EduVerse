@@ -119,6 +119,16 @@ class DoubtNotifier extends StateNotifier<DoubtState> {
     }
   }
 
+  /// Submit doubt directly with params
+  Future<bool> submitDoubt({
+    required String studentId,
+    required String questionText,
+    required String language,
+  }) async {
+    state = state.copyWith(questionText: questionText, targetLanguage: language);
+    return await solveDoubt(studentId);
+  }
+
   /// Speak text aloud via TTS
   Future<void> speakExplanation(String text) async {
     await _speechService.speakText(text);
@@ -128,6 +138,7 @@ class DoubtNotifier extends StateNotifier<DoubtState> {
     await _speechService.stopSpeaking();
   }
 }
+
 
 final doubtProvider = StateNotifierProvider<DoubtNotifier, DoubtState>((ref) {
   return DoubtNotifier();

@@ -139,7 +139,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         label: const Text('Unlink Guardian (Grade 7+ Only)', style: TextStyle(color: AppTheme.warningOrange)),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: AppTheme.warningOrange),
-                          padding: const EdgeInsets.vertical(14),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+
                         ),
                       ),
                     ),
