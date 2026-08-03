@@ -64,11 +64,12 @@ class AppTheme {
         bodyLarge: baseTextTheme.bodyLarge?.copyWith(color: hcText, fontSize: 16),
         bodyMedium: baseTextTheme.bodyMedium?.copyWith(color: isHighContrast ? hcText : textSecondary, fontSize: 14),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surface,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: isHighContrast ? const Color(0xFF222222) : const Color(0xFF2A2739),
