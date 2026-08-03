@@ -161,7 +161,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Offline Mode Active — Serving cached SQLite data & queuing syncs.',
+                        'Offline Mode: viewing cached content only. New doubts & quizzes require internet.',
+
                         style: TextStyle(color: AppTheme.warningOrange, fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ),

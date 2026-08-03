@@ -88,7 +88,30 @@ class _DoubtSolverScreenState extends ConsumerState<DoubtSolverScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
+
+              // Cloud AI Processing Disclosure Indicator
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppTheme.cardSurface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppTheme.primaryViolet.withOpacity(0.5)),
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.info_outline_rounded, color: AppTheme.primaryViolet, size: 16),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "This question will be sent to Google's AI service for processing.",
+                        style: TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
 
               // Input Methods Toolbar (Camera OCR, Gallery OCR, Voice STT)
               Row(
